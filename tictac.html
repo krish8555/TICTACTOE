@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic-Tac-Toe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      cursor: pointer;
+    }
+
+    .cell:hover {
+      background-color: #e2e2e2;
+    }
+
+    #message {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic-Tac-Toe</h1>
+  <div class="board" onclick="makeMove(event)">
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+  </div>
+  <p id="message"></p>
+
+  <script>
+    let currentPlayer = "X";
+    const cells = document.querySelectorAll(".cell");
+    const message = document.getElementById("message");
+
+    function makeMove(event) {
+      const cell = event.target;
+
+      // Check if the cell is empty
+      if (!cell.textContent) {
+        cell.textContent = currentPlayer;
+        cell.style.cursor = "default";
+
+        // Check for a winning move
+        if (checkWin()) {
+          message.textContent = `Player ${currentPlayer} wins!`;
+          disableBoard();
+        } else if (checkDraw()) {
+          message.textContent = "It's a draw!";
+        } else {
+          currentPlayer = currentPlayer === "X" ? "O" : "X";
+          message.textContent = `Player ${currentPlayer}'s turn`;
+        }
+      }
+    }
+
+    function checkWin() {
+      const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (let combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (
+          cells[a].textContent &&
+          cells[a].textContent === cells[b].textContent &&
+          cells[a].textContent === cells[c].textContent
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function checkDraw() {
+      for (let cell of cells) {
+        if (!cell.textContent) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function disableBoard() {
+      for (let cell of cells) {
+        cell.style.pointerEvents = "none";
+      }
+    }
+  </script>
+</body>
+</html>
